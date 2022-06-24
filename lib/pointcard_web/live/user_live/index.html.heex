@@ -15,7 +15,7 @@
 
 <.form for={:test} phx-submit="search">
 
-  <input type="text" name="userrank" value={@userrank} placeholder="会員ランクを入力" class="input">
+  <input type="text" name="userrank" value={@userrank} placeholder="名前または会員ランクを入力" class="input">
   <div>
     <%= submit "検索" , phx_disable_with: "Saving..." %>
   </div>

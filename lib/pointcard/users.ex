@@ -21,16 +21,16 @@ defmodule Pointcard.Users do
   def list_users(userrank) do
     users_base_query(userrank)
     |> Repo.all()
-   # |> IO.inspect()
     |> Repo.preload(:rank)
-   # |> IO.inspect()
   end
 
   defp users_base_query(userrank) do
-    from(u in User,
-    join: r in assoc(u, :rank),
-    where: like(r.name, ^"%#{userrank}%"))
+    from(user in User,
+    join: rank in assoc(user, :rank),
+    where: like(rank.name, ^"%#{userrank}%"),
+    or_where: like(user.name, ^"%#{userrank}%"))
   end
+
 
   @doc """
   Gets a single user.
