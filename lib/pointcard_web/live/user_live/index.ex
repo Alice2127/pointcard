@@ -47,6 +47,6 @@ defmodule PointcardWeb.UserLive.Index do
   end
 
   defp list_users do
-    Users.list_users()
+    Users.list_users("")
   end
 end

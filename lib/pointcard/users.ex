@@ -18,17 +18,18 @@ defmodule Pointcard.Users do
       [%User{}, ...]
 
   """
-  def list_users do
-    users_base_query
+  def list_users(name) do
+    users_base_query(name)
     |> Repo.all()
+   # |> IO.inspect()
     |> Repo.preload(:rank)
+   # |> IO.inspect()
   end
 
-  def users_base_query do
+  defp users_base_query(name) do
     from(u in User,
     join: r in assoc(u, :rank),
-    where: r.id == 1
-    )
+    where: like(r.name, ^"%#{name}%"))
   end
 
   @doc """
