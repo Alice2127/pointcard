@@ -49,6 +49,11 @@ defmodule PointcardWeb.UserLive.Index do
     {:noreply, assign(socket, :users, list_users(""))}
   end
 
+  def handle_event("search", params, socket) do
+  
+  end
+
+
   defp list_users(name) do
     Users.list_users(name)
   end
