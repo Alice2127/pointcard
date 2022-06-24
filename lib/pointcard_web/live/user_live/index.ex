@@ -9,7 +9,7 @@ defmodule PointcardWeb.UserLive.Index do
   IO.inspect("---mount---")
     {:ok,
     socket
-    |> assign(:userrank, "")
+    |> assign(:name, "")
     |> assign(:users, list_users(""))}
   end
 
@@ -50,19 +50,19 @@ defmodule PointcardWeb.UserLive.Index do
   end
 
   def handle_event("search", params, socket) do
-    userrank = params["userrank"] #覗きたい...
+    name = params["name"] #覗きたい...
     Debug.debugtool(params, "params")#覗いた。%{"name" => "ノーマル"}ってなってる。
 
     {:noreply,
     socket
     |> IO.inspect()
-    |> assign(:userrank, userrank)
-    |> assign(:users, list_users(userrank))}
+    |> assign(:name, name)
+    |> assign(:users, list_users(name))}
     |> IO.inspect()
   end
 
 
-  defp list_users(userrank) do
-    Users.list_users(userrank)
+  defp list_users(name) do
+    Users.list_users(name)
   end
 end
