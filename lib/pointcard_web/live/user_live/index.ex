@@ -9,7 +9,7 @@ defmodule PointcardWeb.UserLive.Index do
   IO.inspect("---mount---")
     {:ok,
     socket
-    |> assign(:rank, "")
+    |> assign(:userrank, "")
     |> assign(:users, list_users(""))}
   end
 
@@ -56,8 +56,9 @@ defmodule PointcardWeb.UserLive.Index do
     {:noreply,
     socket
     |> IO.inspect()
-    |> assign(:name, name)
+    |> assign(:userrank, name)
     |> assign(:users, list_users(name))}
+    |> IO.inspect()
   end
 
 
