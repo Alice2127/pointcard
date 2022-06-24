@@ -61,9 +61,7 @@ defmodule Pointcard.Users do
   """
   def create_user(attrs \\ %{}) do
     %User{}
-    |> IO.inspect()
     |> User.changeset(attrs)
-    |> IO.inspect()
     |> Repo.insert()
   end
 
