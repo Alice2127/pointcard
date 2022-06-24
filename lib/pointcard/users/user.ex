@@ -4,8 +4,7 @@ defmodule Pointcard.Users.User do
 
   schema "users" do
     field :name, :string
-    belongs_to()
-  #  field :rank_id, :integer
+    field :rank_id, :integer
 
     timestamps()
   end
