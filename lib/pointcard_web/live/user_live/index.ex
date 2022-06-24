@@ -7,7 +7,7 @@ defmodule PointcardWeb.UserLive.Index do
   @impl true
   def mount(_params, _session, socket) do
   IO.inspect("---mount---")
-    {:ok, assign(socket, :users, list_users())}
+    {:ok, assign(socket, :users, list_users(""))}
   end
 
   @impl true
@@ -43,10 +43,10 @@ defmodule PointcardWeb.UserLive.Index do
     user = Users.get_user!(id)
     {:ok, _} = Users.delete_user(user)
 
-    {:noreply, assign(socket, :users, list_users())}
+    {:noreply, assign(socket, :users, list_users(""))}
   end
 
-  defp list_users do
-    Users.list_users("")
+  defp list_users(name) do
+    Users.list_users(name)
   end
 end
