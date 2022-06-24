@@ -50,7 +50,14 @@ defmodule PointcardWeb.UserLive.Index do
   end
 
   def handle_event("search", params, socket) do
-  
+    name = params["name"] #覗きたい...
+    Debug.debugtool(params, "params")#覗いた。%{"name" => "ノーマル"}ってなってる。
+
+    {:noreply,
+    socket
+    |> IO.inspect()
+    |> assign(:name, name)
+    |> assign(:users, list_users(name))}
   end
 
 
