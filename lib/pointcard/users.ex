@@ -26,7 +26,8 @@ defmodule Pointcard.Users do
 
   def users_base_query do
     from(u in User,
-    join: r in assoc(u, :rank)
+    join: r in assoc(u, :rank),
+    where: r.id == 1
     )
   end
 
