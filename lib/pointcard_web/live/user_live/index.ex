@@ -7,7 +7,9 @@ defmodule PointcardWeb.UserLive.Index do
   @impl true
   def mount(_params, _session, socket) do
   IO.inspect("---mount---")
-    {:ok, assign(socket, :users, list_users(""))}
+    {:ok,
+    socket
+    |> assign(:users, list_users(""))}
   end
 
   @impl true
