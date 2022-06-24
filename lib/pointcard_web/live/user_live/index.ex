@@ -9,6 +9,7 @@ defmodule PointcardWeb.UserLive.Index do
   IO.inspect("---mount---")
     {:ok,
     socket
+    |> assign(:rank, "")
     |> assign(:users, list_users(""))}
   end
 
