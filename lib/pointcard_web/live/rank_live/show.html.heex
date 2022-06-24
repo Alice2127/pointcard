@@ -1,0 +1,26 @@
+<h1>Show Rank</h1>
+
+<%= if @live_action in [:edit] do %>
+  <.modal return_to={Routes.rank_show_path(@socket, :show, @rank)}>
+    <.live_component
+      module={PointcardWeb.RankLive.FormComponent}
+      id={@rank.id}
+      title={@page_title}
+      action={@live_action}
+      rank={@rank}
+      return_to={Routes.rank_show_path(@socket, :show, @rank)}
+    />
+  </.modal>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @rank.name %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.rank_show_path(@socket, :edit, @rank), class: "button" %></span> |
+<span><%= live_redirect "Back", to: Routes.rank_index_path(@socket, :index) %></span>
