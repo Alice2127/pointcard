@@ -2,9 +2,11 @@ defmodule Pointcard.Users.User do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias Pointcard.Ranks.Rank
+
   schema "users" do
     field :name, :string
-    field :rank_id, :integer
+    belongs_to(:rank, Rank)
 
     timestamps()
   end

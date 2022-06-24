@@ -7,6 +7,7 @@ defmodule Pointcard.Users do
   alias Pointcard.Repo
 
   alias Pointcard.Users.User
+  alias Pointcard.Ranks.Rank
 
   @doc """
   Returns the list of users.
@@ -18,7 +19,15 @@ defmodule Pointcard.Users do
 
   """
   def list_users do
-    Repo.all(User)
+    users_base_query
+    |> Repo.all()
+    |> Repo.preload(:rank)
+  end
+
+  def users_base_query do
+    from(u in User,
+    join: r in assoc(u, :rank)
+    )
   end
 
   @doc """
