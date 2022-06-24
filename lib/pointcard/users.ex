@@ -27,8 +27,7 @@ defmodule Pointcard.Users do
   defp users_base_query(name) do
     from(user in User,
     join: rank in assoc(user, :rank),
-    where: like(rank.name, ^"%#{name}%"),
-    or_where: like(user.name, ^"%#{name}%"))
+    where: like(rank.name, ^"%#{name}%"), or like(user.name, ^"%#{name}%"))
   end
 
 
