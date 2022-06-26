@@ -5,12 +5,13 @@ defmodule PointcardWeb.UserLive.Index do
   alias Pointcard.Users.User
 
   @impl true
-  def mount(_params, _session, socket) do
+  def mount(params, _session, socket) do
   IO.inspect("---mount---")
     {:ok,
     socket
     |> assign(:name, "")
-    |> assign(:users, list_users(""))}
+    |> assign(:page_size, 10)
+    |> assign(:users, list_users(params))}
   end
 
   @impl true
@@ -41,13 +42,50 @@ defmodule PointcardWeb.UserLive.Index do
   end
 
   @impl true
-  def handle_event("delete", %{"id" => id}, socket) do
+  def handle_event("delete", params = %{"id" => id}, socket) do
     IO.inspect("---delete---")
     user = Users.get_user!(id)
     {:ok, _} = Users.delete_user(user)
 
-    {:noreply, assign(socket, :users, list_users(""))}
+    {:noreply, assign(socket, :users, list_users(params))}
   end
+
+  @impl true
+  def handle_event("update_page_size", params, socket) do
+    page_size =
+      params
+      |> Map.get("page_size")
+
+    params =
+      params
+      |> Map.put("name", socket.assigns.name)
+
+    socket =
+      socket
+      |> assign(:page_size, String.to_integer(page_size))
+      |> assign(:users, list_users(params))
+
+      {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("update_page", params, socket) do
+    page =
+      params
+      |> Map.get("page")
+
+    params =
+      params
+      |> Map.put("name", socket.assigns.name)
+
+    socket =
+      socket
+      |> assign(:page, String.to_integer(page))
+      |> assign(:users, list_users(params))
+
+      {:noreply, socket}
+  end
+
 
   def handle_event("search", params, socket) do
     name = params["name"]
@@ -55,11 +93,15 @@ defmodule PointcardWeb.UserLive.Index do
     {:noreply,
     socket
     |> assign(:name, name)
-    |> assign(:users, list_users(name))}
+    |> assign(:users, list_users(params))}
   end
 
 
-  defp list_users(name) do
-    Users.list_users(name)
+  defp list_users(params) do
+    name = Map.get(params, "name") || ""
+    page = Map.get(params, "page") || "1"
+    page_size = Map.get(params, "page_size") || "10"
+    
+    Users.list_users(name, page, page_size)
   end
 end

@@ -26,6 +26,7 @@
     <tr>
       <th>お名前</th>
       <th>会員ランク</th>
+      
 
       <th></th>
     </tr>
@@ -45,5 +46,7 @@
     <% end %>
   </tbody>
 </table>
+
+<PointcardWeb.Paginator.render total_entries={@users.total_entries} page_size={@users.page_size} page={@users.page_number} total_pages={@users.total_pages} />
 
 <span><%= live_patch "New User", to: Routes.user_index_path(@socket, :new) %></span>
