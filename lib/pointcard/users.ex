@@ -26,19 +26,19 @@ defmodule Pointcard.Users do
 
     entries =
       users.entries
-     |> Repo.preload(:rank)
+      |> Repo.preload(:rank)
 
-     users
-     |> Map.put(:entries, entries)
+    users
+    |> Map.put(:entries, entries)
   end
 
   defp users_base_query(name) do
     from(user in User,
-    join: rank in assoc(user, :rank),
-    where: like(rank.name, ^"%#{name}%") or like(user.name, ^"%#{name}%"),
-    order_by: [desc: user.inserted_at])
+      join: rank in assoc(user, :rank),
+      where: like(rank.name, ^"%#{name}%") or like(user.name, ^"%#{name}%"),
+      order_by: [desc: user.inserted_at]
+    )
   end
-
 
   @doc """
   Gets a single user.

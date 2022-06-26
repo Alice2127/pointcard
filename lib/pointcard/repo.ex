@@ -3,5 +3,5 @@ defmodule Pointcard.Repo do
     otp_app: :pointcard,
     adapter: Ecto.Adapters.Postgres
 
-    use Scrivener, page_size: 10
+  use Scrivener, page_size: 10
 end

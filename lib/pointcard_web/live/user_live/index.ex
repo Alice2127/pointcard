@@ -6,12 +6,13 @@ defmodule PointcardWeb.UserLive.Index do
 
   @impl true
   def mount(params, _session, socket) do
-  IO.inspect("---mount---")
+    IO.inspect("---mount---")
+
     {:ok,
-    socket
-    |> assign(:name, "")
-    |> assign(:page_size, 10)
-    |> assign(:users, list_users(params))}
+     socket
+     |> assign(:name, "")
+     |> assign(:page_size, 10)
+     |> assign(:users, list_users(params))}
   end
 
   @impl true
@@ -22,6 +23,7 @@ defmodule PointcardWeb.UserLive.Index do
 
   defp apply_action(socket, :edit, %{"id" => id}) do
     IO.inspect("---edit---")
+
     socket
     |> assign(:page_title, "Edit User")
     |> assign(:user, Users.get_user!(id))
@@ -29,6 +31,7 @@ defmodule PointcardWeb.UserLive.Index do
 
   defp apply_action(socket, :new, _params) do
     IO.inspect("---new---")
+
     socket
     |> assign(:page_title, "New User")
     |> assign(:user, %User{})
@@ -36,6 +39,7 @@ defmodule PointcardWeb.UserLive.Index do
 
   defp apply_action(socket, :index, _params) do
     IO.inspect("---index---")
+
     socket
     |> assign(:page_title, "Listing Users")
     |> assign(:user, nil)
@@ -65,7 +69,7 @@ defmodule PointcardWeb.UserLive.Index do
       |> assign(:page_size, String.to_integer(page_size))
       |> assign(:users, list_users(params))
 
-      {:noreply, socket}
+    {:noreply, socket}
   end
 
   @impl true
@@ -83,25 +87,23 @@ defmodule PointcardWeb.UserLive.Index do
       |> assign(:page, String.to_integer(page))
       |> assign(:users, list_users(params))
 
-      {:noreply, socket}
+    {:noreply, socket}
   end
-
 
   def handle_event("search", params, socket) do
     name = params["name"]
 
     {:noreply,
-    socket
-    |> assign(:name, name)
-    |> assign(:users, list_users(params))}
+     socket
+     |> assign(:name, name)
+     |> assign(:users, list_users(params))}
   end
-
 
   defp list_users(params) do
     name = Map.get(params, "name") || ""
     page = Map.get(params, "page") || "1"
     page_size = Map.get(params, "page_size") || "10"
-    
+
     Users.list_users(name, page, page_size)
   end
 end
