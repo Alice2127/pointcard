@@ -26,6 +26,7 @@
     <tr>
       <th>お名前</th>
       <th>会員ランク</th>
+      <th>登録日時</th>
 
       <th></th>
     </tr>
@@ -35,6 +36,7 @@
       <tr id={"user-#{user.id}"}>
         <td><%= user.name %></td>
         <td><%= user.rank_id %> : <%= user.rank.name %></td>
+        <td><%= user.inserted_at %></td>
 
         <td>
           <span><%= live_redirect "Show", to: Routes.user_show_path(@socket, :show, user) %></span>
@@ -45,5 +47,7 @@
     <% end %>
   </tbody>
 </table>
+
+<PointcardWeb.Paginator.render total_entries={@users.total_entries} page_size={@users.page_size} page={@users.page_number} total_pages={@users.total_pages} />
 
 <span><%= live_patch "New User", to: Routes.user_index_path(@socket, :new) %></span>

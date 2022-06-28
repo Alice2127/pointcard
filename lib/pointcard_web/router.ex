@@ -17,7 +17,6 @@ defmodule PointcardWeb.Router do
   scope "/", PointcardWeb do
     pipe_through :browser
 
-
     live "/users", UserLive.Index, :index
     live "/users/new", UserLive.Index, :new
     live "/users/:id/edit", UserLive.Index, :edit
@@ -31,7 +30,6 @@ defmodule PointcardWeb.Router do
 
     live "/ranks/:id", RankLive.Show, :show
     live "/ranks/:id/show/edit", RankLive.Show, :edit
-
 
     get "/", PageController, :index
   end

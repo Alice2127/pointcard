@@ -5,12 +5,14 @@ defmodule PointcardWeb.UserLive.Index do
   alias Pointcard.Users.User
 
   @impl true
-  def mount(_params, _session, socket) do
-  IO.inspect("---mount---")
+  def mount(params, _session, socket) do
+    IO.inspect("---mount---")
+
     {:ok,
-    socket
-    |> assign(:name, "")
-    |> assign(:users, list_users(""))}
+     socket
+     |> assign(:name, "")
+     |> assign(:page_size, 10)
+     |> assign(:users, list_users(params))}
   end
 
   @impl true
@@ -21,6 +23,7 @@ defmodule PointcardWeb.UserLive.Index do
 
   defp apply_action(socket, :edit, %{"id" => id}) do
     IO.inspect("---edit---")
+
     socket
     |> assign(:page_title, "Edit User")
     |> assign(:user, Users.get_user!(id))
@@ -28,6 +31,7 @@ defmodule PointcardWeb.UserLive.Index do
 
   defp apply_action(socket, :new, _params) do
     IO.inspect("---new---")
+
     socket
     |> assign(:page_title, "New User")
     |> assign(:user, %User{})
@@ -35,34 +39,71 @@ defmodule PointcardWeb.UserLive.Index do
 
   defp apply_action(socket, :index, _params) do
     IO.inspect("---index---")
+
     socket
     |> assign(:page_title, "Listing Users")
     |> assign(:user, nil)
   end
 
   @impl true
-  def handle_event("delete", %{"id" => id}, socket) do
+  def handle_event("delete", params = %{"id" => id}, socket) do
     IO.inspect("---delete---")
     user = Users.get_user!(id)
     {:ok, _} = Users.delete_user(user)
 
-    {:noreply, assign(socket, :users, list_users(""))}
+    {:noreply, assign(socket, :users, list_users(params))}
+  end
+
+  @impl true
+  def handle_event("update_page_size", params, socket) do
+    page_size =
+      params
+      |> Map.get("page_size")
+
+    params =
+      params
+      |> Map.put("name", socket.assigns.name)
+
+    socket =
+      socket
+      |> assign(:page_size, String.to_integer(page_size))
+      |> assign(:users, list_users(params))
+
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("update_page", params, socket) do
+    page =
+      params
+      |> Map.get("page")
+
+    params =
+      params
+      |> Map.put("name", socket.assigns.name)
+
+    socket =
+      socket
+      |> assign(:page, String.to_integer(page))
+      |> assign(:users, list_users(params))
+
+    {:noreply, socket}
   end
 
   def handle_event("search", params, socket) do
-    name = params["name"] #覗きたい...
-    Debug.debugtool(params, "params")#覗いた。%{"name" => "ノーマル"}ってなってる。
+    name = params["name"]
 
     {:noreply,
-    socket
-    |> IO.inspect()
-    |> assign(:name, name)
-    |> assign(:users, list_users(name))}
-    |> IO.inspect()
+     socket
+     |> assign(:name, name)
+     |> assign(:users, list_users(params))}
   end
 
+  defp list_users(params) do
+    name = Map.get(params, "name") || ""
+    page = Map.get(params, "page") || "1"
+    page_size = Map.get(params, "page_size") || "10"
 
-  defp list_users(name) do
-    Users.list_users(name)
+    Users.list_users(name, page, page_size)
   end
 end

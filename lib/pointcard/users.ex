@@ -7,7 +7,6 @@ defmodule Pointcard.Users do
   alias Pointcard.Repo
 
   alias Pointcard.Users.User
-  alias Pointcard.Ranks.Rank
 
   @doc """
   Returns the list of users.
@@ -18,19 +17,28 @@ defmodule Pointcard.Users do
       [%User{}, ...]
 
   """
-  def list_users(name) do
-    users_base_query(name)
-    |> Repo.all()
-    |> Repo.preload(:rank)
+  def list_users(name, page, page_size) do
+    users =
+      users_base_query(name)
+      |> IO.inspect()
+      |> Repo.paginate(page: page, page_size: page_size)
+      |> IO.inspect()
+
+    entries =
+      users.entries
+      |> Repo.preload(:rank)
+
+    users
+    |> Map.put(:entries, entries)
   end
 
   defp users_base_query(name) do
     from(user in User,
-    join: rank in assoc(user, :rank),
-    where: like(rank.name, ^"%#{name}%"),
-    or_where: like(user.name, ^"%#{name}%"))
+      join: rank in assoc(user, :rank),
+      where: like(rank.name, ^"%#{name}%") or like(user.name, ^"%#{name}%"),
+      order_by: [desc: user.inserted_at]
+    )
   end
-
 
   @doc """
   Gets a single user.
