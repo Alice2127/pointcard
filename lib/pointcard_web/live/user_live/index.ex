@@ -100,11 +100,8 @@ defmodule PointcardWeb.UserLive.Index do
   end
 
   defp list_users(params) do
-    Debug.debugtool(params, "params")
-    name = Map.get(params, "name") || ""
-    page = Map.get(params, "page") || "1"
-    page_size = Map.get(params, "page_size") || "10"
+   
 
-    Users.list_users(name, page, page_size)
+    Users.list_users(params)
   end
 end

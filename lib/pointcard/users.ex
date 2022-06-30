@@ -18,13 +18,18 @@ defmodule Pointcard.Users do
 
   """
 
-    def list_users(name, page, page_size) do
+    def list_users(params \\ [name: "", page: "1", page_size: "10"]) do
 
-     users =
-      users_base_query()#基本のクエリ
-      |> IO.inspect()
-      |> list_users_where({:name, name}) #検索ボックスのクエリ
-      |> Repo.paginate(page: page, page_size: page_size) #ページネーションのクエリ
+
+      new_params = params
+      |> Map.to_list()
+      |> Enum.map(fn {key, value} -> {String.to_atom(key), value} end)
+      |> IO.inspect() #[name: "h"]こんな感じの戻り値※list_users_whereの第二引数にしたい。
+
+      users =
+      new_params
+      |> build_list_users_query(users_base_query())#第一引数がnew_params、第二引数がusers_base_query()の戻り値クエリ
+      |> Repo.paginate(page: "1", page_size: "10") #ページネーションのクエリ
 
     entries =
       users.entries
@@ -45,7 +50,7 @@ defmodule Pointcard.Users do
   defp build_list_users_query([], query), do: query #search_conditionsが空のリストの時、クエリをそのまま出す。
 
   defp build_list_users_query([condition | rest], query) do #search_conditionsが空のリストでないとき、以下の処理をする。
-    query = list_users_where(query, condition)
+    query = list_users_where(query, condition) #第一引数がquery、第二引数がリストのヘッド部にあたるもの
     build_list_users_query(rest, query) #再帰処理
   end
 
