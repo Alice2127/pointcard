@@ -17,12 +17,14 @@ defmodule Pointcard.Users do
       [%User{}, ...]
 
   """
-  def list_users(name, page, page_size) do
-    users =
-      users_base_query(name)
+
+    def list_users(name, page, page_size) do
+
+     users =
+      users_base_query()#基本のクエリ
       |> IO.inspect()
-      |> Repo.paginate(page: page, page_size: page_size)
-      |> IO.inspect()
+      |> list_users_where({:name, name}) #検索ボックスのクエリ
+      |> Repo.paginate(page: page, page_size: page_size) #ページネーションのクエリ
 
     entries =
       users.entries
@@ -32,13 +34,27 @@ defmodule Pointcard.Users do
     |> Map.put(:entries, entries)
   end
 
-  defp users_base_query(name) do
+  defp users_base_query() do
+
     from(user in User,
       join: rank in assoc(user, :rank),
-      where: like(rank.name, ^"%#{name}%") or like(user.name, ^"%#{name}%"),
       order_by: [desc: user.inserted_at]
     )
   end
+
+  defp build_list_users_query([], query), do: query #search_conditionsが空のリストの時、クエリをそのまま出す。
+
+  defp build_list_users_query([condition | rest], query) do #search_conditionsが空のリストでないとき、以下の処理をする。
+    query = list_users_where(query, condition)
+    build_list_users_query(rest, query) #再帰処理
+  end
+
+  defp list_users_where(query, {_, nil}), do: query #condition の値によってパターンマッチ
+  defp list_users_where(query, {_, ""}), do: query
+
+  defp list_users_where(query, {:name, name}),
+  do: from([user, rank] in query, where: like(rank.name, ^"%#{name}%") or like(user.name, ^"%#{name}%"))
+
 
   @doc """
   Gets a single user.
