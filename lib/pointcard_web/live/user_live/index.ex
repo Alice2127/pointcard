@@ -81,7 +81,7 @@ defmodule PointcardWeb.UserLive.Index do
     params =
       params
       |> Map.put("name", socket.assigns.name)
-    #  |> Map.put("page_size", socket.assigns.page_size)
+      |> Map.put("page_size", socket.assigns.page_size)
 
     socket =
       socket
