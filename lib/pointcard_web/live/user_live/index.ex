@@ -106,9 +106,6 @@ defmodule PointcardWeb.UserLive.Index do
   end
 
   defp default_params() do
-    %{"name" => "",
-      "page" => "1",
-      "page_size" => "10",
-     }
-    end
+    %{"name" => "", "page" => "1", "page_size" => "10"}
+  end
 end
