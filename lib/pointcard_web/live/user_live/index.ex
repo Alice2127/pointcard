@@ -81,6 +81,7 @@ defmodule PointcardWeb.UserLive.Index do
     params =
       params
       |> Map.put("name", socket.assigns.name)
+    #  |> Map.put("page_size", socket.assigns.page_size)
 
     socket =
       socket
@@ -100,8 +101,14 @@ defmodule PointcardWeb.UserLive.Index do
   end
 
   defp list_users(params) do
-   
-
-    Users.list_users(params)
+    params2 = Map.merge(default_params(), params) |> IO.inspect()
+    Users.list_users(params2)
   end
+
+  defp default_params() do
+    %{"name" => "",
+      "page" => "1",
+      "page_size" => "10",
+     }
+    end
 end

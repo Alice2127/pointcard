@@ -18,18 +18,22 @@ defmodule Pointcard.Users do
 
   """
 
-    def list_users(params \\ [name: "", page: "1", page_size: "10"]) do
+    def list_users(params) do
 
 
-      new_params = params
+      {[page: page, page_size: page_size], search_conditions} =
+      params
       |> Map.to_list()
       |> Enum.map(fn {key, value} -> {String.to_atom(key), value} end)
-      |> IO.inspect() #[name: "h"]こんな感じの戻り値※list_users_whereの第二引数にしたい。
+      |> Keyword.split([:page, :page_size])
+      #{[page: "2"], [name: "h", value: ""]}こんな感じの戻り値
+      #nameはlist_users_whereの第二引数にしたい。
+
 
       users =
-      new_params
-      |> build_list_users_query(users_base_query())#第一引数がnew_params、第二引数がusers_base_query()の戻り値クエリ
-      |> Repo.paginate(page: "1", page_size: "10") #ページネーションのクエリ
+      search_conditions
+      |> build_list_users_query(users_base_query())#第一引数が[name: "h", value: ...]、第二引数がusers_base_query()の戻り値クエリ
+      |> Repo.paginate(page: page, page_size: page_size) #ページネーションのクエリ
 
     entries =
       users.entries
@@ -60,7 +64,7 @@ defmodule Pointcard.Users do
   defp list_users_where(query, {:name, name}),
   do: from([user, rank] in query, where: like(rank.name, ^"%#{name}%") or like(user.name, ^"%#{name}%"))
 
-
+  defp list_users_where(query, _x), do: query
   @doc """
   Gets a single user.
 
